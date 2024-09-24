@@ -32,7 +32,7 @@ while True:
         print('Depósito')
 
         while True:
-            valor = int(input('Entre com o valor do depósito: '))
+            valor = float(input('Entre com o valor do depósito: '))
             if valor < 0:
                 print('Operação Falhou! Depósito tem que ser um valor positivo!')
             else:
@@ -56,7 +56,7 @@ while True:
 
         else:
             while True:
-                valor = int(input('Entre com o valor do Saque: '))
+                valor = float(input('Entre com o valor do Saque: '))
 
                 if valor > LIMITE:
                     print(f'Operação Falhou! O saque tem que ser de no máximo R$ {LIMITE:.2f}!')
@@ -86,8 +86,8 @@ while True:
         if len(operacoes) != 0:
             for index in range(0, len(operacoes)):
                 print(f'Operação: {operacoes[index]}')
-                print(f'Saldo Anterior: {operacoes_saldo_atual[index]}')
-                print(f'Saldo Atual: {operacoes_saldo_novo[index]}')
+                print(f'Saldo Anterior: {operacoes_saldo_atual[index]:.2f}')
+                print(f'Saldo Atual: {operacoes_saldo_novo[index]:.2f}')
                 print('-' * 10)
         else:
             print('Não foram realizadas movimentações')

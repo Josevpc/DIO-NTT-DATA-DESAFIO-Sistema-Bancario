@@ -1,3 +1,5 @@
+from datetime import datetime as dt
+
 menu = '''
 
 [d] Depositar
@@ -8,20 +10,25 @@ menu = '''
 => '''
 
 saldo = 0
-LIMITE = 500
+LIMITE_SAQUE = 500
 extrato = ''
 numero_saques = 0
-LIMITE_SAQUES = 3
 
+QUANTIDADE_LIMITE_SAQUES = 3
+QUANTIDADE_LIMITE_TRANSACOES = 10
+
+# Faço a verificação de quantas movimentações foram realizadas pelo len(operacoes) == QUANTIDADE_LIMITE_TRANSACOES
 operacoes = []
 operacoes_saldo_atual = []
 operacoes_saldo_novo = []
+operacoes_dia = []
 
 
 def cadastrar_operacoes(*, operacao, saldo_atual, saldo_novo):
     operacoes.append(operacao)
     operacoes_saldo_atual.append(saldo_atual)
     operacoes_saldo_novo.append(saldo_novo)
+    operacoes_dia.append(dt.now())
 
 
 while True:
@@ -31,35 +38,41 @@ while True:
     if opcao == 'd':
         print('Depósito')
 
-        while True:
-            valor = float(input('Entre com o valor do depósito: '))
-            if valor < 0:
-                print('Operação Falhou! Depósito tem que ser um valor positivo!')
-            else:
-                break
+        if len(operacoes) == QUANTIDADE_LIMITE_TRANSACOES:
+            print('Operação Falhou! Você excedeu o número de transações permitidas no dia!')
 
-        saldo_novo = saldo + valor
+        else:
+            while True:
+                valor = float(input('Entre com o valor do depósito: '))
+                if valor < 0:
+                    print('Operação Falhou! Depósito tem que ser um valor positivo!')
+                else:
+                    break
 
-        cadastrar_operacoes(operacao='Depósito',saldo_atual=saldo, saldo_novo=saldo_novo)
+            saldo_novo = saldo + valor
 
-        saldo = saldo_novo
+            cadastrar_operacoes(operacao='Depósito',saldo_atual=saldo, saldo_novo=saldo_novo)
 
-        print(f'Depósito de R$ {valor:.2f} efetuado com sucesso!')
+            saldo = saldo_novo
+
+            print(f'Depósito de R$ {valor:.2f} efetuado com sucesso!')
 
     elif opcao == 's':
         print('Saque')
 
-        if numero_saques == LIMITE_SAQUES:
+        if len(operacoes) == QUANTIDADE_LIMITE_TRANSACOES:
+            print('Operação Falhou! Você excedeu o número de transações permitidas no dia!')
 
-            print(
-                'Operação Falhou! Não é possível sacar mais dinheiro hoje, tente novamente amanhã!')
+        if numero_saques == QUANTIDADE_LIMITE_SAQUES:
+
+            print('Operação Falhou! Não é possível sacar mais dinheiro hoje, tente novamente amanhã!')
 
         else:
             while True:
                 valor = float(input('Entre com o valor do Saque: '))
 
-                if valor > LIMITE:
-                    print(f'Operação Falhou! O saque tem que ser de no máximo R$ {LIMITE:.2f}!')
+                if valor > LIMITE_SAQUE:
+                    print(f'Operação Falhou! O saque tem que ser de no máximo R$ {LIMITE_SAQUE:.2f}!')
 
                 else:
                     if valor > saldo:
@@ -88,6 +101,7 @@ while True:
                 print(f'Operação: {operacoes[index]}')
                 print(f'Saldo Anterior: {operacoes_saldo_atual[index]:.2f}')
                 print(f'Saldo Atual: {operacoes_saldo_novo[index]:.2f}')
+                print(f'Data da Operação: {operacoes_dia[index].strftime('%d/%m/%Y %H:%M')}')
                 print('-' * 10)
         else:
             print('Não foram realizadas movimentações')

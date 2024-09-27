@@ -12,7 +12,8 @@ O sistema desenvolvido possui as seguintes funcionalidades:
   - Cada saque pode ser de, no máximo, **R$500**.
   - Não é permitido realizar saques se o valor for maior que o saldo disponível (saques negativos).
 
-- **Extrato**: Exibe o histórico de transações realizadas (depósitos e saques), bem como o saldo atual da conta.
+- **Extrato**: Exibe o histórico de transações realizadas (depósitos, saques), juntamente com a data e hora da operação, bem como o saldo atual da conta.
+- **Limite de Operações**: 10 transações diárias. O usuário é informado que ele excedeu o número de transações permitidas.
 
 ## Tecnologias Utilizadas
 

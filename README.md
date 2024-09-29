@@ -11,10 +11,10 @@ O sistema desenvolvido possui as seguintes funcionalidades:
   - Limite de **3 saques diários**.
   - Cada saque pode ser de, no máximo, **R$500**.
   - Não é permitido realizar saques se o valor for maior que o saldo disponível (saques negativos).
-
 - **Extrato**: Exibe o histórico de transações realizadas (depósitos e saques), bem como o saldo atual da conta.
 - **Cadastrar Usuário**: Recebe informações do usuário, como nome, data de nascimento, CPF e endereço. Caso o CPF não esteja cadastrado, cria um novo usuário.
 - **Criar Contar**: Recebe o CPF do usuário e, caso já exista um usuário cadastrado com esse CPF, cria uma nova conta.
+- **Limite de Operações**: 10 transações diárias. O usuário é informado que ele excedeu o número de transações permitidas.
 
 ## Tecnologias Utilizadas
 

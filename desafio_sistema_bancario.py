@@ -1,16 +1,5 @@
 from datetime import datetime, date
 
-menu = '''
-
-[u] Cadastrar Usuário
-[c] Criar Conta Corrente
-[d] Depositar
-[s] Sacar
-[e] Extrato
-[q] Sair
-
-=> '''
-
 saldo = 0
 LIMITE_SAQUE = 500
 extrato = ''
@@ -37,6 +26,20 @@ operacoes_saldo_atual = []
 operacoes_saldo_novo = []
 operacoes_dia = []
 
+def menu():
+    menu = '''
+    [u]  Cadastrar Usuário
+    [c]  Criar Conta Corrente
+    [lu] Listar Usuários
+    [lc] Listar Contas
+    [d]  Depositar
+    [s]  Sacar
+    [e]  Extrato
+    [q]  Sair
+
+    => '''
+    return input(menu)
+
 def cadastrar_operacoes(*, operacao, saldo_atual, saldo_novo):
     operacoes.append(operacao)
     operacoes_saldo_atual.append(saldo_atual)
@@ -50,44 +53,61 @@ def cadastrar_usuario(nome, data_nascimento, cpf, *endereco):
         print('Operação Falhou! Já existe um usuário com esse CPF cadastrado.')
         return None
     else:
-        usuario.append(cpf)
-        usuario.append(nome)
         # Formatando a Data de Nascimento
         data_nascimento = data_nascimento.strip()
         data_nascimento = list(data_nascimento.split(' '))
         data_nascimento = date(int(data_nascimento[2]), int(data_nascimento[1]), int(data_nascimento[0]))
-        usuario.append(data_nascimento)
 
         endereco_str = ' - '.join(endereco)
-        usuario.append(endereco_str)
+
+        usuario = [{'nome':nome, 'data_nascimento':data_nascimento, 'cpf':cpf, 'endereco':endereco_str}]
 
         print('Cadastro de Usuário Realizado com Sucesso!')
 
         return usuario
     
-def cadastrar_conta(*, cpf):
+def cadastrar_conta(*, cpf, contas):
+    agencia = '0001'
     if verifica_usuario_cadastrado(cpf):
-        conta = []
-        # Alocação do CPF
-        conta.append(cpf)
-        # Numero da Conta
-        conta.append(len(lista_contas) + 1)
-        # Numero da Agência
-        conta.append('0001')
-
+        conta_cadastrada = verifica_usuario_conta_cadastrado(cpf)
+        if conta_cadastrada != None:
+            # Metódo len(lista_contas) + 1 não fuciona pois um cpf agora pode ter mais contas viculadas e essas contas não estão listadas na lista de contas
+            conta_cadastrada[cpf].append({'numero':len(lista_contas) + 1, 'agencia':agencia})
+        else:
+            conta = {cpf:[{'numero':len(lista_contas) + 1, 'agencia':agencia}]}
+            contas.append(conta)
+        
         print('Conta Cadastrada com Sucesso!')
 
-        return conta
     else:
         print('Operação Falhou! Não existe um usuário com esse CPF cadastrado.')
-        return None
-
 
 def verifica_usuario_cadastrado(cpf):
     for usuario in lista_usuarios:
-        if usuario[0] == cpf:
+        if usuario[0]['cpf'] == cpf:
             return True
     return False
+
+def verifica_usuario_conta_cadastrado(cpf):
+    for conta in lista_contas:
+        if cpf in conta:
+            return conta
+    return None
+
+def listar_usuarios(lista_usuarios):
+    if len(lista_usuarios) > 0:
+        for usuario in lista_usuarios:
+            print(usuario)
+    else:
+        print('Operação Falhou! Não há usuários cadastrados.')
+
+def listar_contas(contas):
+    if len(contas) > 0:
+        for conta in contas:
+            print(conta)
+    else:
+        print('Operação Falhou! Não há contas cadastradas.')
+
 
 def deposito(saldo, valor, /):
         if valor < 0:
@@ -131,15 +151,15 @@ def extrato():
 
 while True:
 
-    opcao = input(menu)
+    opcao = menu()
 
     if opcao == 'u':
         print('Cadastro de Usuário')
         nome = input('Qual o seu nome ?')
-        data_nascimento = input('Qual é a sua data de nascimento? (Escreva os números com espaço)')
+        data_nascimento = input('Qual é a sua data de nascimento? (Ex: dd mm AAAA)')
         cpf = input('Qual o seu cpf ?')
         print('Agora serão realizadas perguntas sobre seu endereço')
-        logradouro = input('Qual o Logradouro de sua residência ?')
+        logradouro = input('Qual o Logradouro e número de sua residência ? (Ex: Casa, 202)')
         bairro = input('Qual o bairro de sua residência ?')
         cidade_estado = input('Qual a cidade e a sigla do estado em que se encontra sua residência? Ex: (Londrina/PR)')
 
@@ -152,10 +172,15 @@ while True:
         print('Criar Conta Corrente')
         cpf_usuario = input('Digite seu CPF (é necessário ter um cadastro de usuário prévio): ')
 
-        conta = cadastrar_conta(cpf=cpf_usuario)
-        if conta != None:
-            lista_contas.append(conta)
+        cadastrar_conta(cpf=cpf_usuario, contas=lista_contas)
 
+    elif opcao == 'lu':
+        print('Listar Usuários')
+        listar_usuarios(lista_usuarios)
+    
+    elif opcao == 'lc':
+        print('Listar Contas')
+        listar_contas(lista_contas)
 
     elif opcao == 'd':
         print('Depósito')

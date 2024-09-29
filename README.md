@@ -13,6 +13,8 @@ O sistema desenvolvido possui as seguintes funcionalidades:
   - Não é permitido realizar saques se o valor for maior que o saldo disponível (saques negativos).
 
 - **Extrato**: Exibe o histórico de transações realizadas (depósitos e saques), bem como o saldo atual da conta.
+- **Cadastrar Usuário**: Recebe informações do usuário, como nome, data de nascimento, CPF e endereço. Caso o CPF não esteja cadastrado, cria um novo usuário.
+- **Criar Contar**: Recebe o CPF do usuário e, caso já exista um usuário cadastrado com esse CPF, cria uma nova conta.
 
 ## Tecnologias Utilizadas
 
